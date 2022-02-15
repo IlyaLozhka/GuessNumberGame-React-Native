@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, View,ScrollView, SafeAreaView} from 'react-native';
+import {Header} from "./View/header/Header";
+import {Content} from "./View/content/Content";
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import {useState} from "react";
+
+const fetchFonts = () => {
+    return Font.loadAsync({
+        'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+        'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+    });
+}
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+    if (!isDataLoaded) {
+        return (
+            <View>
+                <AppLoading
+                    startAsync={fetchFonts}
+                    onFinish={()=> setIsDataLoaded(true)}
+                    onError={(error)=> console.warn(error)}
+                />
+            </View>
+        )
+    }
+    return (
+        <SafeAreaView style={styles.wrapper}>
+            <ScrollView >
+                <Header/>
+                <Content/>
+            </ScrollView>
+        </SafeAreaView>
+
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    wrapper: {
+        flex: 1
+    },
 });
